@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <img alt="Vue logo" src="./assets/logo.png">
+    <router-view></router-view>
 <!--    <HelloWorld msg="Welcome to Your Vue.js App"></HelloWorld>-->
   </div>
 </template>
@@ -10,18 +11,6 @@
 export default {
   data() {
     return { }
-  },
-
-  // Fetches posts when the component is created.
-  created() {
-    this.axios.get(`http://localhost:5000/`)
-            .then(response => {
-              // JSON responses are automatically parsed.
-              console.log(response)
-            })
-            .catch(e => {
-              console.log(e)
-            })
   }
 }
 </script>
