@@ -2,6 +2,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import HelloWorld from "@/components/HelloWorld";
 import Hi from "@/components/Hi";
+import Login from "../components/Login";
 
 Vue.use(VueRouter);
 
@@ -14,6 +15,10 @@ export default new VueRouter({
         {
             path: '/hi',
             component: Hi
+        },
+        {
+            path: '/login',
+            component: Login
         }
     ],
     mode: 'history'
