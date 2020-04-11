@@ -33,8 +33,10 @@
 <script>
 export default {
   name: 'HelloWorld',
-  props: {
-    msg: String
+  computed: {
+    msg() {
+      return this.$store.state.hello;
+    }
   }
 }
 </script>
