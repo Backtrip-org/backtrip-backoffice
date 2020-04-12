@@ -9,8 +9,10 @@
                     {{ errorMessage }}
                 </v-alert>
                 <v-form>
-                    <v-text-field outlined v-model="email" type="email" label="Email" prepend-inner-icon="mdi-account"/>
-                    <v-text-field v-model="password" label="Mot de passe" prepend-inner-icon="mdi-lock" outlined
+                    <v-text-field :rules="email_rules" outlined v-model="email" type="email" label="Email"
+                                  prepend-inner-icon="mdi-account"/>
+                    <v-text-field :rules="password_rules" v-model="password" label="Mot de passe"
+                                  prepend-inner-icon="mdi-lock" outlined
                                   :type="showPassword ? 'text' : 'password'"
                                   :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
                                   @click:append="showPassword = !showPassword"
@@ -33,14 +35,29 @@
             email: "",
             password: "",
             hidden: true,
-            errorMessage: ""
+            errorMessage: "",
+            email_rules: [
+                value => !!value || "Veuillez indiquer votre email."
+            ],
+            password_rules: [
+                value => !!value || "Veuillez indiquer votre mot de passe."
+            ],
+            email_regex: /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/
         }),
         methods: {
             login() {
-                let requestBody = {email: this.email, password: this.password}
-                this.$http.post('http://127.0.0.1:5000/auth/login', requestBody)
-                    .then(response => this.loginSuccessful(response))
-                    .catch(error => this.loginFailed(error))
+                if (!this.email || !this.password) {
+                    this.errorMessage = "Veuillez saisir tous les champs avant de valider."
+                    this.hidden = false
+                } else if (!this.email.match(this.email_regex)) {
+                    this.errorMessage = "Votre email n'est pas valide."
+                    this.hidden = false
+                } else {
+                    let requestBody = {email: this.email, password: this.password}
+                    this.$http.post('http://127.0.0.1:5000/auth/login', requestBody)
+                        .then(response => this.loginSuccessful(response))
+                        .catch(error => this.loginFailed(error))
+                }
             },
             loginSuccessful(response) {
                 console.log(response)
