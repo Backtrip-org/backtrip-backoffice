@@ -76,6 +76,13 @@
                 }
                 this.hidden = false
             }
+        },
+        created() {
+            window.addEventListener("keypress", function (e) {
+                if(e.key === "Enter") {
+                    this.login()
+                }
+            }.bind(this))
         }
     }
 </script>
