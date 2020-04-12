@@ -15,8 +15,7 @@
                                   prepend-inner-icon="mdi-lock" outlined
                                   :type="showPassword ? 'text' : 'password'"
                                   :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-                                  @click:append="showPassword = !showPassword"
-                    />
+                                  @click:append="showPassword = !showPassword"/>
                 </v-form>
             </v-card-text>
             <v-divider></v-divider>

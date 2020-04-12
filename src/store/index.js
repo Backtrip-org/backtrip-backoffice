@@ -6,7 +6,7 @@ Vue.use(Vuex);
 // States of the application
 const state = {
     hello: 'Hello you!',
-    access_token: 'this is the token'
+    access_token: localStorage.getItem('access_token') || ''
 };
 
 // Modify state; always synchronous
