@@ -1,18 +1,35 @@
 <template>
-    <div>
-        <v-alert :hidden="hidden" dense outlined type="error">
-            {{ errorMessage }}
-        </v-alert>
-        <v-text-field v-model="email" type="email" label="Email"></v-text-field>
-        <v-text-field v-model="password" type="password" label="Mot de passe"></v-text-field>
-        <v-btn @click="login">Valider</v-btn>
-    </div>
+    <v-app>
+        <div id="img-div" class="mx-auto mt-2">
+            <v-img src="../assets/panda.jpg"></v-img>
+        </div>
+        <v-card width="600" class="mx-auto mt-2">
+            <v-card-text>
+                <v-alert :hidden="hidden" dense outlined type="error">
+                    {{ errorMessage }}
+                </v-alert>
+                <v-form>
+                    <v-text-field outlined v-model="email" type="email" label="Email" prepend-inner-icon="mdi-account"/>
+                    <v-text-field v-model="password" label="Mot de passe" prepend-inner-icon="mdi-lock" outlined
+                                  :type="showPassword ? 'text' : 'password'"
+                                  :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                                  @click:append="showPassword = !showPassword"
+                    />
+                </v-form>
+            </v-card-text>
+            <v-divider></v-divider>
+            <v-card-actions class="justify-center">
+                <v-btn outlined width="200" @click="login" color="success">Valider</v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-app>
 </template>
 
 <script>
     export default {
         name: "Login",
         data: () => ({
+            showPassword: false,
             email: "",
             password: "",
             hidden: true,
@@ -20,22 +37,22 @@
         }),
         methods: {
             login() {
-                let requestBody = { email: this.email, password: this.password }
-                this.$http.post('http://127.0.0.1:5000/auth/login',requestBody)
+                let requestBody = {email: this.email, password: this.password}
+                this.$http.post('http://127.0.0.1:5000/auth/login', requestBody)
                     .then(response => this.loginSuccessful(response))
-                .catch(error => this.loginFailed(error))
+                    .catch(error => this.loginFailed(error))
             },
             loginSuccessful(response) {
                 console.log(response)
-                if(response.status === 200) {
+                if (response.status === 200) {
                     this.$store.commit("setAccessToken", response.data.Authorization)
                     this.$router.push('/')
                 }
             },
             loginFailed(error) {
-                if(!error.response) {
+                if (!error.response) {
                     this.errorMessage = "Le serveur est indisponible."
-                } else if(error.response.status === 400) {
+                } else if (error.response.status === 400) {
                     this.errorMessage = "Email ou mot de passe inccorect."
                 } else {
                     this.errorMessage = "Une erreur est survenue. Veuillez contacter le support."
@@ -47,5 +64,7 @@
 </script>
 
 <style scoped>
-
+    #img-div {
+        width: 350px;
+    }
 </style>
