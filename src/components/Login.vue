@@ -1,9 +1,9 @@
 <template>
     <v-app>
-        <div id="img-div" class="mx-auto mt-2">
-            <v-img src="../assets/panda.jpg"></v-img>
+        <div id="img-div" class="mx-auto ma-6">
+            <v-img src="../assets/backtrip-logo.png"></v-img>
         </div>
-        <v-card width="600" class="mx-auto mt-2">
+        <v-card width="600" class="mx-auto ma-6">
             <v-card-text>
                 <v-alert :hidden="hidden" dense outlined type="error">
                     {{ errorMessage }}
@@ -20,7 +20,7 @@
             </v-card-text>
             <v-divider></v-divider>
             <v-card-actions class="justify-center">
-                <v-btn outlined width="200" @click="login" color="success">Valider</v-btn>
+                <v-btn outlined width="200" @click="login" color="primary">Valider</v-btn>
             </v-card-actions>
         </v-card>
     </v-app>

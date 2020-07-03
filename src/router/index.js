@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import HelloWorld from "@/components/HelloWorld";
 import Hi from "@/components/Hi";
 import Login from "../components/Login";
 
@@ -10,7 +9,7 @@ export default new VueRouter({
     routes: [
         {
             path: '/',
-            component: HelloWorld
+            redirect: '/login',
         },
         {
             path: '/hi',
