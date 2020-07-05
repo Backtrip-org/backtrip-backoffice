@@ -2,6 +2,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Hi from "@/components/Hi";
 import Login from "../components/Login";
+import HelloWorld from "../components/HelloWorld";
 
 Vue.use(VueRouter);
 
@@ -9,7 +10,7 @@ export default new VueRouter({
     routes: [
         {
             path: '/',
-            redirect: '/login',
+            component: HelloWorld
         },
         {
             path: '/hi',

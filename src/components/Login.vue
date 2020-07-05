@@ -53,7 +53,7 @@
                     this.hidden = false
                 } else {
                     let requestBody = {email: this.email, password: this.password}
-                    this.$http.post('http://127.0.0.1:5000/auth/login', requestBody)
+                    this.$http.post('http://127.0.0.1:5000/auth/adminLogin', requestBody)
                         .then(response => this.loginSuccessful(response))
                         .catch(error => this.loginFailed(error))
                 }
