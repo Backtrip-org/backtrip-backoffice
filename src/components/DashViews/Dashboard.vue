@@ -58,10 +58,10 @@
         lg3
       >
         <material-stats-card
+          :value="globalStats.open_trips"
           color="green"
           icon="mdi-book-open-variant"
           title="Voyages ouverts"
-          value="230"
           sub-icon="mdi-clock"
           sub-text="Actuellement"
         />
@@ -73,10 +73,10 @@
         lg3
       >
         <material-stats-card
+          :value="globalStats.closed_trips"
           color="orange"
           icon="mdi-book"
           title="Voyages fermés"
-          value="80"
           sub-icon="mdi-clock"
           sub-text="Actuellement"
         />
@@ -88,10 +88,10 @@
         lg3
       >
         <material-stats-card
+          :value="globalStats.created_steps"
           color="info"
           icon="mdi-flag"
           title="Etapes créées"
-          value="245"
           sub-icon="mdi-update"
           sub-text="Depuis le lancement"
         />
@@ -103,10 +103,10 @@
         lg3
       >
         <material-stats-card
+          :value="globalStats.users_number"
           color="red"
           icon="mdi-account"
           title="Utilisateurs"
-          value="34"
           sub-icon="mdi-clock"
           sub-text="Actuellement"
         />
@@ -151,6 +151,7 @@
         name: 'Dashboard',
         data () {
             return {
+                globalStats: {},
                 dailySalesChart: {
                     data: {
                         labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
@@ -313,9 +314,16 @@
                 }
             }
         },
+        created () {
+            this.getOpenTrips()
+        },
         methods: {
-            complete (index) {
-                this.list[index] = !this.list[index]
+            getOpenTrips () {
+                this.$http.get('/stats/global')
+                    .then(response => {
+                        this.globalStats = response.data
+                    })
+                    .catch(error => console.log(error))
             }
         }
     }
