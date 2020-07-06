@@ -11,8 +11,8 @@
         lg4
       >
         <material-chart-card
-          :data="dailySalesChart.data"
-          :options="dailySalesChart.options"
+          :data="last10DaysDailyRegistrationChart.data"
+          :options="last10DaysDailyRegistrationChart.options"
           color="warning"
           type="Line"
         >
@@ -173,6 +173,27 @@
             }
           }
         },
+        last10DaysDailyRegistrationChart: {
+          data: {
+            labels: [],
+            series: [
+              []
+            ]
+          },
+          options: {
+            axisX: {
+              showGrid: false
+            },
+            low: 0,
+            high: 30,
+            chartPadding: {
+              top: 0,
+              right: 5,
+              bottom: 0,
+              left: 0
+            }
+          }
+        },
         dailySalesChart: {
           data: {
             labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
@@ -258,6 +279,7 @@
         created () {
             this.getOpenTrips()
             this.getTopVisitedCountries()
+            this.getLast10DaysDailyRegistration()
         },
         methods: {
             getOpenTrips () {
@@ -273,6 +295,15 @@
                         this.topCountriesChart.data.labels = response.data.labels
                         this.topCountriesChart.data.series = [response.data.values]
                         this.topCountriesChart.options.high = response.data.values[0] + (response.data.values[0] * 0.2)
+                      })
+                      .catch(error => console.log(error))
+            },
+            getLast10DaysDailyRegistration () {
+              this.$http.get('/stats/last10DaysDailyRegistration')
+                      .then(response => {
+                        this.last10DaysDailyRegistrationChart.data.labels = response.data.labels
+                        this.last10DaysDailyRegistrationChart.data.series = [response.data.values]
+                        this.last10DaysDailyRegistrationChart.options.high = Math.max.apply(Math, response.data.values) + 1
                       })
                       .catch(error => console.log(error))
             }
