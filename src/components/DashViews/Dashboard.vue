@@ -11,8 +11,8 @@
         lg4
       >
         <material-chart-card
-          :data="last10DaysDailyRegistrationChart.data"
-          :options="last10DaysDailyRegistrationChart.options"
+          :data="dailyRegistrationChart.data"
+          :options="dailyRegistrationChart.options"
           color="warning"
           type="Line"
         >
@@ -26,9 +26,9 @@
         lg4
       >
         <material-chart-card
-          :data="emailsSubscriptionChart.data"
-          :options="emailsSubscriptionChart.options"
-          :responsive-options="emailsSubscriptionChart.responsiveOptions"
+          :data="dailyTripCreationsChart.data"
+          :options="dailyTripCreationsChart.options"
+          :responsive-options="dailyTripCreationsChart.responsiveOptions"
           color="red"
           type="Bar"
         >
@@ -117,8 +117,8 @@
         lg4
       >
         <material-chart-card
-          :data="dataCompletedTasksChart.data"
-          :options="dataCompletedTasksChart.options"
+          :data="stepTypesDistributionChart.data"
+          :options="stepTypesDistributionChart.options"
           color="indigo"
           type="Bar"
         >
@@ -133,8 +133,8 @@
         lg4
       >
         <material-chart-card
-          :data="dataCompletedTasksChart.data"
-          :options="dataCompletedTasksChart.options"
+          :data="transportStepTypesDistributionChart.data"
+          :options="transportStepTypesDistributionChart.options"
           color="indigo"
           type="Bar"
         >
@@ -147,58 +147,58 @@
 </template>
 
 <script>
-  export default {
-    name: 'Dashboard',
-    data () {
-      return {
-        globalStats: {},
-        topCountriesChart: {
-          data: {
-            labels: [],
-            series: [
-              []
-            ]
-          },
-          options: {
-            axisX: {
-              showGrid: false
-            },
-            low: 0,
-            high: 30,
-            chartPadding: {
-              top: 0,
-              right: 5,
-              bottom: 0,
-              left: 0
-            }
-          }
-        },
-        last10DaysDailyRegistrationChart: {
-          data: {
-            labels: [],
-            series: [
-              []
-            ]
-          },
-          options: {
-            axisX: {
-              showGrid: false
-            },
-            low: 0,
-            high: 30,
-            chartPadding: {
-              top: 0,
-              right: 5,
-              bottom: 0,
-              left: 0
-            }
-          }
-        },
-        dailySalesChart: {
-          data: {
-            labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
+    export default {
+        name: 'Dashboard',
+        data () {
+            return {
+                globalStats: {},
+                topCountriesChart: {
+                    data: {
+                        labels: [],
                         series: [
-                            [12, 17, 7, 17, 23, 18, 38]
+                            []
+                        ]
+                    },
+                    options: {
+                        axisX: {
+                            showGrid: false
+                        },
+                        low: 0,
+                        high: 30,
+                        chartPadding: {
+                            top: 0,
+                            right: 5,
+                            bottom: 0,
+                            left: 0
+                        }
+                    }
+                },
+                dailyRegistrationChart: {
+                    data: {
+                        labels: [],
+                        series: [
+                            []
+                        ]
+                    },
+                    options: {
+                        axisX: {
+                            showGrid: false
+                        },
+                        low: 0,
+                        high: 30,
+                        chartPadding: {
+                            top: 0,
+                            right: 5,
+                            bottom: 0,
+                            left: 0
+                        }
+                    }
+                },
+                stepTypesDistributionChart: {
+                    data: {
+                        labels: [],
+                        series: [
+                            []
                         ]
                     },
                     options: {
@@ -206,7 +206,7 @@
                             tension: 0
                         }),
                         low: 0,
-                        high: 50,
+                        high: 1000,
                         chartPadding: {
                             top: 0,
                             right: 0,
@@ -215,11 +215,11 @@
                         }
                     }
                 },
-                dataCompletedTasksChart: {
+                transportStepTypesDistributionChart: {
                     data: {
-                        labels: ['12am', '3pm', '6pm', '9pm', '12pm', '3am', '6am', '9am'],
+                        labels: [],
                         series: [
-                            [230, 750, 450, 300, 280, 240, 200, 190]
+                            []
                         ]
                     },
                     options: {
@@ -227,7 +227,7 @@
                             tension: 0
                         }),
                         low: 0,
-                        high: 1000, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
+                        high: 1000,
                         chartPadding: {
                             top: 0,
                             right: 0,
@@ -236,11 +236,11 @@
                         }
                     }
                 },
-                emailsSubscriptionChart: {
+                dailyTripCreationsChart: {
                     data: {
-                        labels: ['Ja', 'Fe', 'Ma', 'Ap', 'Mai', 'Ju', 'Jul', 'Au', 'Se', 'Oc', 'No', 'De'],
+                        labels: [],
                         series: [
-                            [542, 443, 320, 780, 553, 453, 326, 434, 568, 610, 756, 895]
+                            []
 
                         ]
                     },
@@ -280,6 +280,9 @@
             this.getOpenTrips()
             this.getTopVisitedCountries()
             this.getLast10DaysDailyRegistration()
+            this.getLast10DaysDailyTripCreation()
+            this.getStepTypesDistribution()
+            this.getTransportStepTypesDistribution()
         },
         methods: {
             getOpenTrips () {
@@ -290,22 +293,49 @@
                     .catch(error => console.log(error))
             },
             getTopVisitedCountries () {
-              this.$http.get('/stats/topVisitedCountries')
-                      .then(response => {
+                this.$http.get('/stats/topVisitedCountries')
+                    .then(response => {
                         this.topCountriesChart.data.labels = response.data.labels
                         this.topCountriesChart.data.series = [response.data.values]
                         this.topCountriesChart.options.high = response.data.values[0] + (response.data.values[0] * 0.2)
-                      })
-                      .catch(error => console.log(error))
+                    })
+                    .catch(error => console.log(error))
             },
             getLast10DaysDailyRegistration () {
-              this.$http.get('/stats/last10DaysDailyRegistration')
-                      .then(response => {
-                        this.last10DaysDailyRegistrationChart.data.labels = response.data.labels
-                        this.last10DaysDailyRegistrationChart.data.series = [response.data.values]
-                        this.last10DaysDailyRegistrationChart.options.high = Math.max.apply(Math, response.data.values) + 1
-                      })
-                      .catch(error => console.log(error))
+                this.$http.get('/stats/last10DaysDailyRegistration')
+                    .then(response => {
+                        this.dailyRegistrationChart.data.labels = response.data.labels
+                        this.dailyRegistrationChart.data.series = [response.data.values]
+                        this.dailyRegistrationChart.options.high = Math.max.apply(Math, response.data.values) + 1
+                    })
+                    .catch(error => console.log(error))
+            },
+            getLast10DaysDailyTripCreation () {
+                this.$http.get('/stats/last10DaysDailyTripCreation')
+                    .then(response => {
+                        this.dailyTripCreationsChart.data.labels = response.data.labels
+                        this.dailyTripCreationsChart.data.series = [response.data.values]
+                        this.dailyTripCreationsChart.options.high = Math.max.apply(Math, response.data.values) + 1
+                    })
+                    .catch(error => console.log(error))
+            },
+            getStepTypesDistribution () {
+                this.$http.get('/stats/stepTypesDistribution')
+                    .then(response => {
+                        this.stepTypesDistributionChart.data.labels = response.data.labels
+                        this.stepTypesDistributionChart.data.series = [response.data.values]
+                        this.stepTypesDistributionChart.options.high = Math.max.apply(Math, response.data.values) + 5
+                    })
+                    .catch(error => console.log(error))
+            },
+            getTransportStepTypesDistribution () {
+                this.$http.get('/stats/transportStepTypesDistribution')
+                    .then(response => {
+                        this.transportStepTypesDistributionChart.data.labels = response.data.labels
+                        this.transportStepTypesDistributionChart.data.series = [response.data.values]
+                        this.transportStepTypesDistributionChart.options.high = Math.max.apply(Math, response.data.values) + 5
+                    })
+                    .catch(error => console.log(error))
             }
         }
     }
