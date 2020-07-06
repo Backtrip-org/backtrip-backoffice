@@ -42,12 +42,12 @@
         lg4
       >
         <material-chart-card
-          :data="countriesPieChart.data"
-          :options="countriesPieChart.options"
+          :data="topCountriesChart.data"
+          :options="topCountriesChart.options"
           color="green"
           type="Bar"
         >
-          <h3 class="title font-weight-light">Pays visités</h3>
+          <h3 class="title font-weight-light">Top 5 des pays les plus visités</h3>
           <p class="category d-inline-flex font-weight-light">Depuis le lancement</p>
         </material-chart-card>
       </v-flex>
@@ -147,14 +147,35 @@
 </template>
 
 <script>
-    export default {
-        name: 'Dashboard',
-        data () {
-            return {
-                globalStats: {},
-                dailySalesChart: {
-                    data: {
-                        labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
+  export default {
+    name: 'Dashboard',
+    data () {
+      return {
+        globalStats: {},
+        topCountriesChart: {
+          data: {
+            labels: [],
+            series: [
+              []
+            ]
+          },
+          options: {
+            axisX: {
+              showGrid: false
+            },
+            low: 0,
+            high: 30,
+            chartPadding: {
+              top: 0,
+              right: 5,
+              bottom: 0,
+              left: 0
+            }
+          }
+        },
+        dailySalesChart: {
+          data: {
+            labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
                         series: [
                             [12, 17, 7, 17, 23, 18, 38]
                         ]
@@ -164,7 +185,7 @@
                             tension: 0
                         }),
                         low: 0,
-                        high: 50, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
+                        high: 50,
                         chartPadding: {
                             top: 0,
                             right: 0,
@@ -189,27 +210,6 @@
                         chartPadding: {
                             top: 0,
                             right: 0,
-                            bottom: 0,
-                            left: 0
-                        }
-                    }
-                },
-                countriesPieChart: {
-                    data: {
-                        labels: ['France', 'Etats-Unis', 'Italie', 'Espagne', 'Canada'],
-                        series: [
-                            [230, 750, 450, 300, 280]
-                        ]
-                    },
-                    options: {
-                        axisX: {
-                            showGrid: false
-                        },
-                        low: 0,
-                        high: 1000,
-                        chartPadding: {
-                            top: 0,
-                            right: 5,
                             bottom: 0,
                             left: 0
                         }
@@ -247,65 +247,6 @@
                         }]
                     ]
                 },
-                headers: [
-                    {
-                        sortable: false,
-                        text: 'ID',
-                        value: 'id'
-                    },
-                    {
-                        sortable: false,
-                        text: 'Name',
-                        value: 'name'
-                    },
-                    {
-                        sortable: false,
-                        text: 'Salary',
-                        value: 'salary',
-                        align: 'right'
-                    },
-                    {
-                        sortable: false,
-                        text: 'Country',
-                        value: 'country',
-                        align: 'right'
-                    },
-                    {
-                        sortable: false,
-                        text: 'City',
-                        value: 'city',
-                        align: 'right'
-                    }
-                ],
-                items: [
-                    {
-                        name: 'Dakota Rice',
-                        country: 'Niger',
-                        city: 'Oud-Tunrhout',
-                        salary: '$35,738'
-                    },
-                    {
-                        name: 'Minerva Hooper',
-                        country: 'Curaçao',
-                        city: 'Sinaai-Waas',
-                        salary: '$23,738'
-                    }, {
-                        name: 'Sage Rodriguez',
-                        country: 'Netherlands',
-                        city: 'Overland Park',
-                        salary: '$56,142'
-                    }, {
-                        name: 'Philip Chanley',
-                        country: 'Korea, South',
-                        city: 'Gloucester',
-                        salary: '$38,735'
-                    }, {
-                        name: 'Doris Greene',
-                        country: 'Malawi',
-                        city: 'Feldkirchen in Kārnten',
-                        salary: '$63,542'
-                    }
-                ],
                 tabs: 0,
                 list: {
                     0: false,
@@ -316,6 +257,7 @@
         },
         created () {
             this.getOpenTrips()
+            this.getTopVisitedCountries()
         },
         methods: {
             getOpenTrips () {
@@ -324,6 +266,15 @@
                         this.globalStats = response.data
                     })
                     .catch(error => console.log(error))
+            },
+            getTopVisitedCountries () {
+              this.$http.get('/stats/topVisitedCountries')
+                      .then(response => {
+                        this.topCountriesChart.data.labels = response.data.labels
+                        this.topCountriesChart.data.series = [response.data.values]
+                        this.topCountriesChart.options.high = response.data.values[0] + (response.data.values[0] * 0.2)
+                      })
+                      .catch(error => console.log(error))
             }
         }
     }
