@@ -30,7 +30,7 @@
           :options="dailyTripCreationsChart.options"
           :responsive-options="dailyTripCreationsChart.responsiveOptions"
           color="red"
-          type="Bar"
+          type="Line"
         >
           <h4 class="title font-weight-light">Créations de voyage journalières</h4>
           <p class="category d-inline-flex font-weight-light">10 derniers jours</p>
@@ -142,6 +142,22 @@
           <p class="category d-inline-flex font-weight-light">Depuis le lancement</p>
         </material-chart-card>
       </v-flex>
+
+      <v-flex
+        md12
+        sm12
+        lg4
+      >
+        <material-chart-card
+          :data="dailyStepsChart.data"
+          :options="dailyStepsChart.options"
+          color="purple"
+          type="Line"
+        >
+          <h3 class="title font-weight-light">Nombre d'étapes par jour</h3>
+          <p class="category d-inline-flex font-weight-light">10 derniers jours</p>
+        </material-chart-card>
+      </v-flex>
     </v-layout>
   </v-container>
 </template>
@@ -174,6 +190,27 @@
                     }
                 },
                 dailyRegistrationChart: {
+                    data: {
+                        labels: [],
+                        series: [
+                            []
+                        ]
+                    },
+                    options: {
+                        axisX: {
+                            showGrid: false
+                        },
+                        low: 0,
+                        high: 30,
+                        chartPadding: {
+                            top: 0,
+                            right: 5,
+                            bottom: 0,
+                            left: 0
+                        }
+                    }
+                },
+                dailyStepsChart: {
                     data: {
                         labels: [],
                         series: [
@@ -281,6 +318,7 @@
             this.getTopVisitedCountries()
             this.getLast10DaysDailyRegistration()
             this.getLast10DaysDailyTripCreation()
+            this.getLast10DaysDailyStepsNumber()
             this.getStepTypesDistribution()
             this.getTransportStepTypesDistribution()
         },
@@ -316,6 +354,15 @@
                         this.dailyTripCreationsChart.data.labels = response.data.labels
                         this.dailyTripCreationsChart.data.series = [response.data.values]
                         this.dailyTripCreationsChart.options.high = Math.max.apply(Math, response.data.values) + 1
+                    })
+                    .catch(error => console.log(error))
+            },
+            getLast10DaysDailyStepsNumber () {
+                this.$http.get('/stats/last10DaysDailyStepsNumber')
+                    .then(response => {
+                        this.dailyStepsChart.data.labels = response.data.labels
+                        this.dailyStepsChart.data.series = [response.data.values]
+                        this.dailyStepsChart.options.high = Math.max.apply(Math, response.data.values) + 2
                     })
                     .catch(error => console.log(error))
             },
