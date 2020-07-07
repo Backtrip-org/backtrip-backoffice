@@ -58,7 +58,7 @@
         lg3
       >
         <material-stats-card
-          :value="globalStats.open_trips"
+          :value="globalStats.open_trips.toString()"
           color="green"
           icon="mdi-book-open-variant"
           title="Voyages ouverts"
@@ -73,7 +73,7 @@
         lg3
       >
         <material-stats-card
-          :value="globalStats.closed_trips"
+          :value="globalStats.closed_trips.toString()"
           color="orange"
           icon="mdi-book"
           title="Voyages fermés"
@@ -88,7 +88,7 @@
         lg3
       >
         <material-stats-card
-          :value="globalStats.created_steps"
+          :value="globalStats.created_steps.toString()"
           color="info"
           icon="mdi-flag"
           title="Etapes créées"
@@ -103,7 +103,7 @@
         lg3
       >
         <material-stats-card
-          :value="globalStats.users_number"
+          :value="globalStats.users_number.toString()"
           color="red"
           icon="mdi-account"
           title="Utilisateurs"
@@ -167,7 +167,12 @@
         name: 'Dashboard',
         data () {
             return {
-                globalStats: {},
+                globalStats: {
+                  open_trips: 0,
+                  closed_trips: 0,
+                  created_steps: 0,
+                  users_number: 0
+                },
                 topCountriesChart: {
                     data: {
                         labels: [],
