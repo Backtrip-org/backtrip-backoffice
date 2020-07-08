@@ -11,7 +11,7 @@
           sm8
           md4>
           <v-card
-            class="elevation-12">
+            class="my-5 elevation-12">
             <v-toolbar
               color="general">
               <v-toolbar-title>Administration Backtrip</v-toolbar-title>
@@ -24,7 +24,7 @@
                   v-model="email"
                   :rules="[() => !!email || 'Ce champ est obligatoire']"
                   prepend-icon="mdi-account"
-                  label="email"
+                  label="Email"
                   placeholder="adresse@mail.com"
                   required
                 />
@@ -65,7 +65,7 @@
                 flat
                 @click="snackbar = false"
               >
-                Close
+                Fermer
               </v-btn>
             </v-snackbar>
           </v-card>
@@ -82,7 +82,7 @@ export default {
     return {
       email: '',
       password: '',
-      errorMessages: 'Incorrect login info',
+      errorMessages: 'Informations incorrectes',
       snackbar: false,
       color: 'general',
       showPassword: false
@@ -105,7 +105,7 @@ export default {
   },
   metaInfo () {
     return {
-      title: 'Super Secret | Login'
+      title: 'Connexion'
     }
   }
 }

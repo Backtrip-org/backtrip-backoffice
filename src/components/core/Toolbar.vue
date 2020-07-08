@@ -31,12 +31,6 @@
           content-class
           offset-y
           transition="slide-y-transition"/>
-        <router-link
-          v-ripple
-          class="toolbar-items"
-          to="/dashboard/user-profile">
-          <v-icon color>mdi-account</v-icon>
-        </router-link>
 
         <v-icon
           class="toolbar-items"
@@ -52,7 +46,7 @@ import { mapMutations, mapGetters } from 'vuex'
 
 export default {
   data: () => ({
-    title: 'Backtrip - Panneau d\'administration',
+    title: 'Panneau d\'administration',
     responsive: false,
     responsiveInput: false
   }),

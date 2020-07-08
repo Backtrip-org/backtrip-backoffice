@@ -11,8 +11,8 @@
         lg4
       >
         <material-chart-card
-          :data="dailySalesChart.data"
-          :options="dailySalesChart.options"
+          :data="dailyRegistrationChart.data"
+          :options="dailyRegistrationChart.options"
           color="warning"
           type="Line"
         >
@@ -26,11 +26,11 @@
         lg4
       >
         <material-chart-card
-          :data="emailsSubscriptionChart.data"
-          :options="emailsSubscriptionChart.options"
-          :responsive-options="emailsSubscriptionChart.responsiveOptions"
+          :data="dailyTripCreationsChart.data"
+          :options="dailyTripCreationsChart.options"
+          :responsive-options="dailyTripCreationsChart.responsiveOptions"
           color="red"
-          type="Bar"
+          type="Line"
         >
           <h4 class="title font-weight-light">Créations de voyage journalières</h4>
           <p class="category d-inline-flex font-weight-light">10 derniers jours</p>
@@ -42,12 +42,12 @@
         lg4
       >
         <material-chart-card
-          :data="countriesPieChart.data"
-          :options="countriesPieChart.options"
+          :data="topCountriesChart.data"
+          :options="topCountriesChart.options"
           color="green"
           type="Bar"
         >
-          <h3 class="title font-weight-light">Pays visités</h3>
+          <h3 class="title font-weight-light">Top 5 des pays les plus visités</h3>
           <p class="category d-inline-flex font-weight-light">Depuis le lancement</p>
         </material-chart-card>
       </v-flex>
@@ -58,10 +58,10 @@
         lg3
       >
         <material-stats-card
+          :value="globalStats.open_trips.toString()"
           color="green"
           icon="mdi-book-open-variant"
           title="Voyages ouverts"
-          value="230"
           sub-icon="mdi-clock"
           sub-text="Actuellement"
         />
@@ -73,10 +73,10 @@
         lg3
       >
         <material-stats-card
+          :value="globalStats.closed_trips.toString()"
           color="orange"
           icon="mdi-book"
           title="Voyages fermés"
-          value="80"
           sub-icon="mdi-clock"
           sub-text="Actuellement"
         />
@@ -88,10 +88,10 @@
         lg3
       >
         <material-stats-card
+          :value="globalStats.created_steps.toString()"
           color="info"
           icon="mdi-flag"
           title="Etapes créées"
-          value="245"
           sub-icon="mdi-update"
           sub-text="Depuis le lancement"
         />
@@ -103,10 +103,10 @@
         lg3
       >
         <material-stats-card
+          :value="globalStats.users_number.toString()"
           color="red"
           icon="mdi-account"
           title="Utilisateurs"
-          value="34"
           sub-icon="mdi-clock"
           sub-text="Actuellement"
         />
@@ -117,8 +117,8 @@
         lg4
       >
         <material-chart-card
-          :data="dataCompletedTasksChart.data"
-          :options="dataCompletedTasksChart.options"
+          :data="stepTypesDistributionChart.data"
+          :options="stepTypesDistributionChart.options"
           color="indigo"
           type="Bar"
         >
@@ -133,13 +133,29 @@
         lg4
       >
         <material-chart-card
-          :data="dataCompletedTasksChart.data"
-          :options="dataCompletedTasksChart.options"
+          :data="transportStepTypesDistributionChart.data"
+          :options="transportStepTypesDistributionChart.options"
           color="indigo"
           type="Bar"
         >
           <h3 class="title font-weight-light">Répartition des étapes par type de transport</h3>
           <p class="category d-inline-flex font-weight-light">Depuis le lancement</p>
+        </material-chart-card>
+      </v-flex>
+
+      <v-flex
+        md12
+        sm12
+        lg4
+      >
+        <material-chart-card
+          :data="dailyStepsChart.data"
+          :options="dailyStepsChart.options"
+          color="purple"
+          type="Line"
+        >
+          <h3 class="title font-weight-light">Nombre d'étapes par jour</h3>
+          <p class="category d-inline-flex font-weight-light">10 derniers jours</p>
         </material-chart-card>
       </v-flex>
     </v-layout>
@@ -151,53 +167,17 @@
         name: 'Dashboard',
         data () {
             return {
-                dailySalesChart: {
-                    data: {
-                        labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
-                        series: [
-                            [12, 17, 7, 17, 23, 18, 38]
-                        ]
-                    },
-                    options: {
-                        lineSmooth: this.$chartist.Interpolation.cardinal({
-                            tension: 0
-                        }),
-                        low: 0,
-                        high: 50, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
-                        chartPadding: {
-                            top: 0,
-                            right: 0,
-                            bottom: 0,
-                            left: 0
-                        }
-                    }
+                globalStats: {
+                  open_trips: 0,
+                  closed_trips: 0,
+                  created_steps: 0,
+                  users_number: 0
                 },
-                dataCompletedTasksChart: {
+                topCountriesChart: {
                     data: {
-                        labels: ['12am', '3pm', '6pm', '9pm', '12pm', '3am', '6am', '9am'],
+                        labels: [],
                         series: [
-                            [230, 750, 450, 300, 280, 240, 200, 190]
-                        ]
-                    },
-                    options: {
-                        lineSmooth: this.$chartist.Interpolation.cardinal({
-                            tension: 0
-                        }),
-                        low: 0,
-                        high: 1000, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
-                        chartPadding: {
-                            top: 0,
-                            right: 0,
-                            bottom: 0,
-                            left: 0
-                        }
-                    }
-                },
-                countriesPieChart: {
-                    data: {
-                        labels: ['France', 'Etats-Unis', 'Italie', 'Espagne', 'Canada'],
-                        series: [
-                            [230, 750, 450, 300, 280]
+                            []
                         ]
                     },
                     options: {
@@ -205,7 +185,7 @@
                             showGrid: false
                         },
                         low: 0,
-                        high: 1000,
+                        high: 30,
                         chartPadding: {
                             top: 0,
                             right: 5,
@@ -214,11 +194,95 @@
                         }
                     }
                 },
-                emailsSubscriptionChart: {
+                dailyRegistrationChart: {
                     data: {
-                        labels: ['Ja', 'Fe', 'Ma', 'Ap', 'Mai', 'Ju', 'Jul', 'Au', 'Se', 'Oc', 'No', 'De'],
+                        labels: [],
                         series: [
-                            [542, 443, 320, 780, 553, 453, 326, 434, 568, 610, 756, 895]
+                            []
+                        ]
+                    },
+                    options: {
+                        axisX: {
+                            showGrid: false
+                        },
+                        low: 0,
+                        high: 30,
+                        chartPadding: {
+                            top: 0,
+                            right: 5,
+                            bottom: 0,
+                            left: 0
+                        }
+                    }
+                },
+                dailyStepsChart: {
+                    data: {
+                        labels: [],
+                        series: [
+                            []
+                        ]
+                    },
+                    options: {
+                        axisX: {
+                            showGrid: false
+                        },
+                        low: 0,
+                        high: 30,
+                        chartPadding: {
+                            top: 0,
+                            right: 5,
+                            bottom: 0,
+                            left: 0
+                        }
+                    }
+                },
+                stepTypesDistributionChart: {
+                    data: {
+                        labels: [],
+                        series: [
+                            []
+                        ]
+                    },
+                    options: {
+                        lineSmooth: this.$chartist.Interpolation.cardinal({
+                            tension: 0
+                        }),
+                        low: 0,
+                        high: 1000,
+                        chartPadding: {
+                            top: 0,
+                            right: 0,
+                            bottom: 0,
+                            left: 0
+                        }
+                    }
+                },
+                transportStepTypesDistributionChart: {
+                    data: {
+                        labels: [],
+                        series: [
+                            []
+                        ]
+                    },
+                    options: {
+                        lineSmooth: this.$chartist.Interpolation.cardinal({
+                            tension: 0
+                        }),
+                        low: 0,
+                        high: 1000,
+                        chartPadding: {
+                            top: 0,
+                            right: 0,
+                            bottom: 0,
+                            left: 0
+                        }
+                    }
+                },
+                dailyTripCreationsChart: {
+                    data: {
+                        labels: [],
+                        series: [
+                            []
 
                         ]
                     },
@@ -246,65 +310,6 @@
                         }]
                     ]
                 },
-                headers: [
-                    {
-                        sortable: false,
-                        text: 'ID',
-                        value: 'id'
-                    },
-                    {
-                        sortable: false,
-                        text: 'Name',
-                        value: 'name'
-                    },
-                    {
-                        sortable: false,
-                        text: 'Salary',
-                        value: 'salary',
-                        align: 'right'
-                    },
-                    {
-                        sortable: false,
-                        text: 'Country',
-                        value: 'country',
-                        align: 'right'
-                    },
-                    {
-                        sortable: false,
-                        text: 'City',
-                        value: 'city',
-                        align: 'right'
-                    }
-                ],
-                items: [
-                    {
-                        name: 'Dakota Rice',
-                        country: 'Niger',
-                        city: 'Oud-Tunrhout',
-                        salary: '$35,738'
-                    },
-                    {
-                        name: 'Minerva Hooper',
-                        country: 'Curaçao',
-                        city: 'Sinaai-Waas',
-                        salary: '$23,738'
-                    }, {
-                        name: 'Sage Rodriguez',
-                        country: 'Netherlands',
-                        city: 'Overland Park',
-                        salary: '$56,142'
-                    }, {
-                        name: 'Philip Chanley',
-                        country: 'Korea, South',
-                        city: 'Gloucester',
-                        salary: '$38,735'
-                    }, {
-                        name: 'Doris Greene',
-                        country: 'Malawi',
-                        city: 'Feldkirchen in Kārnten',
-                        salary: '$63,542'
-                    }
-                ],
                 tabs: 0,
                 list: {
                     0: false,
@@ -313,9 +318,76 @@
                 }
             }
         },
+        created () {
+            this.getOpenTrips()
+            this.getTopVisitedCountries()
+            this.getLast10DaysDailyRegistration()
+            this.getLast10DaysDailyTripCreation()
+            this.getLast10DaysDailyStepsNumber()
+            this.getStepTypesDistribution()
+            this.getTransportStepTypesDistribution()
+        },
         methods: {
-            complete (index) {
-                this.list[index] = !this.list[index]
+            getOpenTrips () {
+                this.$http.get('/stats/global')
+                    .then(response => {
+                        this.globalStats = response.data
+                    })
+                    .catch(error => console.log(error))
+            },
+            getTopVisitedCountries () {
+                this.$http.get('/stats/topVisitedCountries')
+                    .then(response => {
+                        this.topCountriesChart.data.labels = response.data.labels
+                        this.topCountriesChart.data.series = [response.data.values]
+                        this.topCountriesChart.options.high = response.data.values[0] + (response.data.values[0] * 0.2)
+                    })
+                    .catch(error => console.log(error))
+            },
+            getLast10DaysDailyRegistration () {
+                this.$http.get('/stats/last10DaysDailyRegistration')
+                    .then(response => {
+                        this.dailyRegistrationChart.data.labels = response.data.labels
+                        this.dailyRegistrationChart.data.series = [response.data.values]
+                        this.dailyRegistrationChart.options.high = Math.max.apply(Math, response.data.values) + 1
+                    })
+                    .catch(error => console.log(error))
+            },
+            getLast10DaysDailyTripCreation () {
+                this.$http.get('/stats/last10DaysDailyTripCreation')
+                    .then(response => {
+                        this.dailyTripCreationsChart.data.labels = response.data.labels
+                        this.dailyTripCreationsChart.data.series = [response.data.values]
+                        this.dailyTripCreationsChart.options.high = Math.max.apply(Math, response.data.values) + 1
+                    })
+                    .catch(error => console.log(error))
+            },
+            getLast10DaysDailyStepsNumber () {
+                this.$http.get('/stats/last10DaysDailyStepsNumber')
+                    .then(response => {
+                        this.dailyStepsChart.data.labels = response.data.labels
+                        this.dailyStepsChart.data.series = [response.data.values]
+                        this.dailyStepsChart.options.high = Math.max.apply(Math, response.data.values) + 2
+                    })
+                    .catch(error => console.log(error))
+            },
+            getStepTypesDistribution () {
+                this.$http.get('/stats/stepTypesDistribution')
+                    .then(response => {
+                        this.stepTypesDistributionChart.data.labels = response.data.labels
+                        this.stepTypesDistributionChart.data.series = [response.data.values]
+                        this.stepTypesDistributionChart.options.high = Math.max.apply(Math, response.data.values) + 5
+                    })
+                    .catch(error => console.log(error))
+            },
+            getTransportStepTypesDistribution () {
+                this.$http.get('/stats/transportStepTypesDistribution')
+                    .then(response => {
+                        this.transportStepTypesDistributionChart.data.labels = response.data.labels
+                        this.transportStepTypesDistributionChart.data.series = [response.data.values]
+                        this.transportStepTypesDistributionChart.options.high = Math.max.apply(Math, response.data.values) + 5
+                    })
+                    .catch(error => console.log(error))
             }
         }
     }
